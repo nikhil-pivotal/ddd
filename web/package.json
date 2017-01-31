@@ -1,0 +1,25 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "dependencies": {
+    "rps": "file:../rps",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "babelify": "latest",
+    "babel-preset-es2015": "latest",
+    "babel-preset-react": "latest"
+  },
+  "watch": {
+    "compile": {
+      "patterns": ["*"],
+      "ignore": "compiled_main"
+    }
+  },
+  "scripts": {
+    "compile": "browserify main.js -o compiled_main.js -t [ babelify --presets [es2015 react ] ]",
+    "watch": "npm-watch"
+  }
+}
+
