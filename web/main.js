@@ -77,9 +77,6 @@ const Play = React.createClass({
   }
 })
 
-const RComp = () => {
-    return (<div>Hello, World!</div>)
-}
 
 ReactDOM.render(
     <Play/>,
