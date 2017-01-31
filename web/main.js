@@ -3,14 +3,9 @@ const React = require("react")
 const ReactDOM = require("react-dom")
 
 
-const RPSInput = ({name, handle}) => {
-
-    function handler() {
-        alert("Trapping on change from the select")
-    }
-
+const RPSInput = ({name, handler}) => {
     return (
-        <select name={name} onChange={handle}>
+        <select name={name} onChange={handler}>
             <option></option>
             <option>rock</option>
             <option>paper</option>
@@ -69,11 +64,11 @@ const Play = React.createClass({
       return (
       <div>
           <form onSubmit={this.submitPlay}>
-              <input type="text" name="p1" onChange={this.p1Changed}/>
-              <input type="text" name="p2" onChange={this.p2Changed}/>
+              {/*<input type="text" name="p1" onChange={this.p1Changed}/>*/}
+              {/*<input type="text" name="p2" onChange={this.p2Changed}/>*/}
 
-              {/*<RPSInput name="p1" onChange={this.p1Changed} />*/}
-              {/*<RPSInput name="p2" onChange={this.p2Changed} />*/}
+              <RPSInput name="p1" handler={this.p1Changed} />
+              <RPSInput name="p2" handler={this.p2Changed} />
 
               <input type="submit" value="Play"/>
           </form>

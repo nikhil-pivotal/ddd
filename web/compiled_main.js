@@ -63,16 +63,11 @@ var ReactDOM = require("react-dom");
 
 var RPSInput = function RPSInput(_ref) {
     var name = _ref.name,
-        handle = _ref.handle;
-
-
-    function handler() {
-        alert("Trapping on change from the select");
-    }
+        handler = _ref.handler;
 
     return React.createElement(
         "select",
-        { name: name, onChange: handle },
+        { name: name, onChange: handler },
         React.createElement("option", null),
         React.createElement(
             "option",
@@ -137,8 +132,8 @@ var Play = React.createClass({
             React.createElement(
                 "form",
                 { onSubmit: this.submitPlay },
-                React.createElement("input", { type: "text", name: "p1", onChange: this.p1Changed }),
-                React.createElement("input", { type: "text", name: "p2", onChange: this.p2Changed }),
+                React.createElement(RPSInput, { name: "p1", handler: this.p1Changed }),
+                React.createElement(RPSInput, { name: "p2", handler: this.p2Changed }),
                 React.createElement("input", { type: "submit", value: "Play" })
             )
         );
