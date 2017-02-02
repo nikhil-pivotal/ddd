@@ -1,4 +1,4 @@
-const { play } = require("rps")
+const {play, history, FakePlayRepo} = require("rps")
 const React = require("react")
 const ReactDOM = require("react-dom")
 
@@ -14,67 +14,121 @@ const RPSInput = ({name, handler}) => {
     )
 }
 
+const History = ({plays}) => {
+    return(
+        <ul>
+            {plays.map((play, index) =>
+               <li key={index}>{play.p1Throw + ", " + play.p2Throw + ", " + play.winner}</li>
+            )}
+        </ul>
+    )
+}
+
+const Result = ({result, errors}) => {
+    return (
+        <div>
+            <h1>{result}</h1>
+
+            {errors.map((error, index) =>
+                <h2 key={index}>{error}</h2>
+            )}
+        </div>
+    )
+}
+
 const Play = React.createClass({
-  getInitialState() {
-      return {
-          p1: null,
-          p2: null
-      }
-  },
+    getInitialState() {
+        this.repo = new FakePlayRepo()
 
-  submitPlay(e) {
-      e.preventDefault()
+        return {
+            p1: null,
+            p2: null,
+            result: "",
+            errors: [
+            ],
+            currentHistory: <h1>No rounds!</h1>
+        }
+    },
 
-      play(this.state.p1, this.state.p2, this)
-  },
+    componentDidMount(){
+        history(this, this.repo)
+    },
 
-  p1Changed(e) {
-      e.stopPropagation();
+    submitPlay(e) {
+        e.preventDefault()
 
-      this.setState({p1: e.target.value})
-  },
+        play(this.state.p1, this.state.p2, this, this.repo)
+        history(this, this.repo)
+    },
 
-  p2Changed(e) {
-      e.stopPropagation();
+    p1Changed(e) {
+        e.stopPropagation();
 
-      this.setState({p2: e.currentTarget.value})
-  },
+        this.setState({p1: e.target.value})
+    },
 
-  p1Invalid() {
-      alert("P1 entry was invalid")
-  },
+    p2Changed(e) {
+        e.stopPropagation();
 
-  p2Invalid() {
-      alert("P2 entry was invalid")
-  },
+        this.setState({p2: e.currentTarget.value})
+    },
 
-  tie() {
-      alert("Tie")
-  },
+    invalid(validationErrors) {
+        let errors = []
 
-  p1Wins() {
-      alert("P1 Wins !")
-  },
+        for (var i = 0; i < validationErrors.length; i++) {
+            var error = validationErrors[i]
 
-  p2Wins() {
-      alert("P2 Wins !")
-  },
+            errors.push(error.player + " " + error.errorCode)
+        }
 
-  render() {
-      return (
-      <div>
-          <form onSubmit={this.submitPlay}>
-              {/*<input type="text" name="p1" onChange={this.p1Changed}/>*/}
-              {/*<input type="text" name="p2" onChange={this.p2Changed}/>*/}
+        this.setState({
+            result: "Invalid Game!",
+            errors: errors
+        })
+    },
 
-              <RPSInput name="p1" handler={this.p1Changed} />
-              <RPSInput name="p2" handler={this.p2Changed} />
+    tie() {
+        this.setState({
+            result: "Tie !"
+        })
+    },
 
-              <input type="submit" value="Play"/>
-          </form>
-      </div>
-      )
-  }
+    p1Wins() {
+        this.setState({
+            result: "P1 Wins !"
+        })
+    },
+
+    p2Wins() {
+        this.setState({
+            result: "P2 Wins !"
+        })
+    },
+
+    plays(rounds){
+        this.setState({currentHistory: <History plays={rounds}/>})
+    },
+
+    noPlays(){
+    },
+
+    render() {
+        return (
+            <div>
+
+                <Result result={this.state.result} errors={this.state.errors}/>
+
+                <form onSubmit={this.submitPlay}>
+                    <input type="text" name="p1" onChange={this.p1Changed}/>
+                    <input type="text" name="p2" onChange={this.p2Changed}/>
+                    <input type="submit" value="Play"/>
+                </form>
+
+                {this.state.currentHistory}
+            </div>
+        )
+    }
 })
 
 
